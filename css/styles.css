@@ -88,6 +88,10 @@ button {
   border-radius: 5px;
 }
 
+.letter {
+  transition: color 0.5s ease-out, background-color 0.5s ease-out;
+}
+
 .space {
   width: 15px;
 }
