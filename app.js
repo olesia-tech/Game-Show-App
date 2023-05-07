@@ -35,6 +35,8 @@ function addPhraseToDisplay(arr){
     li.textContent = phraseArray[i];
     if(/[a-zA-Z]/.test(phraseArray[i])){
       li.classList.add('letter');
+    } else if(phraseArray[i] === ''){
+      li.classList.add('space');
     }
     ul.appendChild(li);
   } 
@@ -84,6 +86,14 @@ qwerty.addEventListener('click', (event) => {
   }
 });
 
+function resetKeyboard(){
+  const buttons = document.querySelectorAll('#qwerty button');
+  for(let i = 0; i < buttons.length; i++){
+    buttons[i].classList.remove('chosen');
+    buttons[i].disabled = false;
+  }
+}
+
 resetButton.addEventListener('click', () => {
   if(overlay.classList.contains('win') || overlay.classList.contains('lose')){
     resetButton.textContent = 'Start Game';
@@ -92,5 +102,6 @@ resetButton.addEventListener('click', () => {
     for(let i = 0; i < hearts.length; i++){
       hearts[i].src = 'images/liveHeart.png';
     }
+    resetKeyboard();
   }
 });
