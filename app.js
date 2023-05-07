@@ -34,7 +34,7 @@ function addPhraseToDisplay(arr){
     const li = document.createElement('li');
     li.textContent = phraseArray[i];
     if(/[a-zA-Z]/.test(phraseArray[i])){
-      li.className += ' letter';
+      li.classList.add('letter');
     }
     ul.appendChild(li);
   } 
@@ -47,18 +47,33 @@ function checkLetter(button){
   let match = null;
   for(let i = 0; i < letters.length; i++){
     if(button.textContent === letters[i].textContent){
-      letters[i].className +=' show';
+      letters[i].classList.add('show');
       match = button.textContent
     }
   }
   return match;
 }
 
+function checkWin() {
+  const shownLetters = document.querySelectorAll('.show');
+  const letters = phraseArray.filter(char => /[a-zA-Z]/.test(char));
+  if(letters.length === shownLetters.length){
+    overlay.classList.add('win');
+    overlay.style.display = '';
+    resetButton.textContent = 'Play again';
+  } else if(missed >= 5) {
+    overlay.classList.add('lose');
+    overlay.style.display = '';
+    resetButton.textContent = 'Try again';
+  }
+  }
+
+
 
 qwerty.addEventListener('click', (event) => {
   if(event.target.tagName === 'BUTTON'){
     const button = event.target;
-    button.className += ' chosen';
+    button.classList.add('chosen');
     button.disabled = true;
     const letterFound = checkLetter(button);
     if(!letterFound){
@@ -70,16 +85,12 @@ qwerty.addEventListener('click', (event) => {
 });
 
 resetButton.addEventListener('click', () => {
-  if(overlay.className.contains('win') || overlay.className.contains('lose')){
+  if(overlay.classList.contains('win') || overlay.classList.contains('lose')){
     resetButton.textContent = 'Start Game';
-    phrase.innerHTML = '';
-    const newPhrase = getRandomPhrase(phrases);
-    addPhraseToDisplay(newPhrase);
+    addPhraseToDisplay(getRandomPhraseAsArray(phrases));
     missed = 0;
     for(let i = 0; i < hearts.length; i++){
       hearts[i].src = 'images/liveHeart.png';
     }
-  } else {
-    startGame();
   }
-})
+});
