@@ -30,22 +30,25 @@ const phraseArray = getRandomPhraseAsArray(phrases);
 function addPhraseToDisplay(arr){
   const ul = document.querySelector('#phrase ul');
   ul.innerHTML = '';
-  for (let i = 0; i < phraseArray.length; i++){
-    const li = document.createElement('li');
-    li.textContent = phraseArray[i];
-    if(/[a-zA-Z]/.test(phraseArray[i])){
-      li.classList.add('letter');
-    } else if(phraseArray[i] === ''){
+  for (let i = 0; i < arr.length; i++){
+    const char = arr[i];
+    if (char === ' '){
+      const li = document.createElement('li');
       li.classList.add('space');
+      ul.appendChild(li);
+    }else if (/[a-zA-Z]/.test(char)){
+      const li = document.createElement('li');
+      li.textContent = char;
+      li.classList.add('letter');
+      ul.appendChild(li);
     }
-    ul.appendChild(li);
-  } 
+}
 }
 
 addPhraseToDisplay(phraseArray);
 
 function checkLetter(button){
-  const letters = document.querySelectorAll('.letter');
+  const letters = document.querySelectorAll('.letter, .space');
   let match = null;
   for(let i = 0; i < letters.length; i++){
     if(button.textContent === letters[i].textContent){
@@ -56,10 +59,19 @@ function checkLetter(button){
   return match;
 }
 
+function resetGame(){
+  addPhraseToDisplay(getRandomPhraseAsArray(phrases));
+  resetKeyboard();
+  missed = 0;
+  for(let i=0; i < hearts.length; i++){
+    hearts[i].src = 'images/liveHeart.png';
+  }
+}
+
 function checkWin() {
   const shownLetters = document.querySelectorAll('.show');
-  const letters = phraseArray.filter(char => /[a-zA-Z]/.test(char));
-  if(letters.length === shownLetters.length){
+  const letters = document.querySelectorAll('.letter');
+  if(shownLetters.length === letters.length){
     overlay.classList.add('win');
     overlay.style.display = '';
     resetButton.textContent = 'Play again';
@@ -96,6 +108,8 @@ function resetKeyboard(){
 
 resetButton.addEventListener('click', () => {
   if(overlay.classList.contains('win') || overlay.classList.contains('lose')){
+    overlay.classList.remove('win', 'lose');
+    overlay.style.display = 'none';
     resetButton.textContent = 'Start Game';
     addPhraseToDisplay(getRandomPhraseAsArray(phrases));
     missed = 0;
